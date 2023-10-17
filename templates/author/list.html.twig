@@ -1,0 +1,35 @@
+<h1>List Authors</h1>
+
+{% set x=0 %} {% set i=1 %} {% if tabAuthors is empty %}
+<h1>Tab vide</h1>
+{% else %}
+
+<table border="1">
+  <tr>
+    <td>Id</td>
+    <td>Name</td>
+    <td>Email</td>
+    <td>Books</td>
+    <td>Actions</td>
+    <td>Pictures</td>
+  </tr>
+  {% for author in tabAuthors %}
+  <tr>
+    <td>{{ author.id }}</td>
+    <td>{{ author.username | upper }}</td>
+    <td>{{ author.email }}</td>
+    <td>{{ author.nb_books }}</td>
+    <td><a href="{{ path('list_service') }}">Show more +</a></td>
+    <td>
+      <img src="{{ asset("Image/{{i}}.png") }}" alt="{{ i }}" height="100"
+      width="100">
+    </td>
+  </tr>
+
+  {% set x=x+author.nb_books %} {% set i=i+1 %} {% endfor %}
+</table>
+
+{% endif %} Nbr of Authors: {{ tabAuthors | length }} <br />
+Nbr of books: {{ x }} <br />
+
+<img src="{{ asset("Image/05.png") }}" alt="05" height="100" width="100">
