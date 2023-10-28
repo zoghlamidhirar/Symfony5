@@ -35,6 +35,19 @@ class BookController extends AbstractController
         );
     }
 
+    /**
+     * @Route("/booklist", name="list_book")
+     */
+    public function listBook(BookRepository $repository)
+    {
+        $books = $repository->sortByAuthor();
+
+        return $this->render(
+            "book/listbooks.html.twig",
+            array('tabBooks' => $books)
+        );
+    }
+
     #[Route('/addbook', name: 'addbook')]
     public function addbook(Request $request, ManagerRegistry $managerRegistry)
     {
@@ -87,5 +100,27 @@ class BookController extends AbstractController
             'book/show.html.twig',
             array('book' => $repository->find($ref))
         );
+    }
+
+    /**
+     * @Route("/booksearchbyref", name="search_book_by_ref")
+     */
+    public function searchBookByRef(BookRepository $repository,  Request $request)
+    {
+        $ref = $request->query->get('ref');
+        $books = $repository->searchBookByRef($ref);
+
+        return $this->render(
+            "book/listbooksbyref.html.twig",
+            array('tabBooks' => $books)
+        );
+    }
+
+    #[Route('/books/{id}', name: 'show_book')]
+    public function findBooksByAuthor($id, BookRepository  $repository)
+    {
+        return $this->render("book/booksByAuthor.html.twig", array(
+            'books' => $repository->findBooksByAuthor($id)
+        ));
     }
 }

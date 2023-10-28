@@ -21,28 +21,62 @@ class BookRepository extends ServiceEntityRepository
         parent::__construct($registry, Book::class);
     }
 
-//    /**
-//     * @return Book[] Returns an array of Book objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('b')
-//            ->andWhere('b.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('b.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    //    /**
+    //     * @return Book[] Returns an array of Book objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('b')
+    //            ->andWhere('b.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('b.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
 
-//    public function findOneBySomeField($value): ?Book
-//    {
-//        return $this->createQueryBuilder('b')
-//            ->andWhere('b.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    public function findOneBySomeField($value): ?Book
+    //    {
+    //        return $this->createQueryBuilder('b')
+    //            ->andWhere('b.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
+    public function sortByAuthor(): array
+    {
+        $qb = $this->createQueryBuilder('b');
+        $qb->orderBy('b.author', 'DESC');
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findBooksByAuthor($id)
+    {
+        $qb = $this->createQueryBuilder('b')
+            ->join('b.author', 'a')
+            ->where('a.id = :x')
+            ->andWhere('b.publicationDate > :y')
+            ->setParameter('x', $id)
+            ->setParameter('y', '2023-01-01');
+        return $qb->getQuery()
+            ->getResult();
+    }
+    /*
+    public function searchBookBytitle(): array
+    {
+        $qb = $this->createQueryBuilder('b');
+        $qb->orderBy('b.author', 'DESC');
+        return $qb->getQuery()->getResult();
+    } */
+
+    public function searchBookByRef($ref)
+    {
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.ref = :ref')
+            ->setParameter('ref', $ref)
+            ->getQuery()
+            ->getOneOrNullResult();  //utilisée pour obtenir un seul résultat ou null
+    }
 }
